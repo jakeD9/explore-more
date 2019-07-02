@@ -1,0 +1,32 @@
+.btn {
+    &,
+    &:link,
+    &:visited {
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 1rem 3rem;
+        display: inline-block;
+        border-radius: 8rem;
+        transition: all .2s;
+        position: relative;
+        font-size: 1.4rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    &:hover,
+    &:focus {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba($color-black, .3);
+    }
+
+    &:active {
+        transform: translateY(-1px);
+        box-shadow: 0 0.5rem 1rem rgba($color-black, .3);
+    }
+
+    &--search {
+        background-color: $color-primary;
+        color: $color-grey-light;
+    }
+}

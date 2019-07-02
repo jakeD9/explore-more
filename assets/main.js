@@ -1,182 +1,131 @@
-var today = moment();
-var tomorrow = moment().add(1, "days");
+let map;
 
-var map;
-
-function initializeMap(city) {
-  $("#map").empty();
-
-  // Initialize the Platform object for maps
-  var platform = new H.service.Platform({
-    'app_id': 'Ck0H4ECXsoZw2kJ1JNpK',
-    'app_code': 'V7OoN7FBZLHPyoQ-8Uh9uQ',
+let initializeMap = (city) => {
+  // maps object instantiated with credentials
+  let platform = new H.service.Platform({
+    'app_id': 'QTX9Ulhk71aSUq6SF51d',
+    'app_code': 'JEHV174h_P1Oj2Q_cBEuGA',
     useHTTPS: true
   });
 
-  var pixelRatio = window.devicePixelRatio || 1;
-  var defaultLayers = platform.createDefaultLayers({
+  // gets default map types from the platform object
+  let pixelRatio = window.devicePixelRatio || 1;
+  let defaultLayers = platform.createDefaultLayers({
     tileSize: pixelRatio === 1 ? 256 : 512,
     ppi: pixelRatio === 1 ? undefined : 320
   });
 
-  // Initialize map
-  map = new H.Map(document.getElementById('map'),
-    defaultLayers.normal.map, { pixelRatio: pixelRatio });
+  // actually initializing the map to the dom element
+  map = new H.Map(
+    document.getElementById('mapEmbed'),
+    defaultLayers.normal.map,
+    { pixelRatio: pixelRatio });
 
-  // Make the map interactive
-  var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  // interactive ui
+  let behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  let ui = H.ui.UI.createDefault(map, defaultLayers);
 
-  // Create the default UI components
-  var ui = H.ui.UI.createDefault(map, defaultLayers);
-
-  // Create the parameters for the geocoding request:
-  var geocodingParams = {
+  // defining geocoding parameters to search
+  let geocodeSearch = {
     searchText: city
   };
 
-  // Define a callback function to process the geocoding response:
-  var onResult = function (result) {
-    var locations = result.Response.View[0].Result,
+  // callback function to parse geocoding response
+  let onResult = (result) => {
+    let location =
+      result.Response.View[0].Result,
       position,
       marker;
 
-    position = {
-      lat: locations[0].Location.DisplayPosition.Latitude,
-      lng: locations[0].Location.DisplayPosition.Longitude
-    };
+      position = {
+        lat: location[0].Location.DisplayPosition.Latitude,
+        lng: location[0].Location.DisplayPosition.Longitude
+      }
 
     moveMap(map, position.lat, position.lng);
   };
 
-  // Get an instance of the geocoding service:
-  var geocoder = platform.getGeocodingService();
-
-  geocoder.geocode(geocodingParams, onResult, function (e) {
-    alert(e);
-  });
+  let geocoder = platform.getGeocodingService();
+  geocoder.geocode(
+    geocodeSearch,
+    onResult, (e) => {
+      alert(e);
+    });
 }
 
-function moveMap(map, lat, lng) {
-  map.setCenter({ lat: lat, lng: lng });
+let moveMap = (map, lat, lng) => {
+  map.setCenter({
+    lat: lat,
+    lng: lng
+  })
   map.setZoom(12);
 }
 
 $(document).ready(function () {
 
-  // hiding the div at first
-  $("#spin").addClass("hidden");
-
-  
- 
   // click handler so that nothing runs without it being clicked first
-  $("#spinbtn").on("click", function () {
+  $("#search").on("click", () => {
 
-    AOS.init();
-    $("#spin").empty();
-    var places = ["Denver", "Jacksonville", "Portland", "Kansas City", "Las Vegas"]
+    // identify some keys and values to be used
+    const zomatoKey = "af0b75e10ec2c9e797c35598e8fc0207";
+    const weatherKey = "7cc8e08326886fb8098d2b341400c7da";
+    const userLocationQuery = $("#destination").val();
 
-    var random = places[Math.floor(Math.random() * places.length)];
-    console.log(random);
+    // google map init, setting our latitude and longitude for weather api
+    initializeMap("Denver");
 
-    // function to get the zomato city id code assigned to the randomly chosen city
-    function placeChosen() {
-      if (random === "Denver") {
-        return "305";
-      } else if (random === "Jacksonville") {
-        return "574";
-      } else if (random === "Portland") {
-        return "286";
-      } else if (random === "Kansas City") {
-        return "856";
-      } else if (random === "Las Vegas") {
-        return "282";
-      }
-    };
+    // look up zomato city id since we can't just search restaurants by name
+    const getZomatoPlaceId = (query) => {
+      const zomatoIdURL = "https://developers.zomato.com/api/v2.1/cities?q=" + query;
 
-    // zomato ajax elements
-    var zomatoKey = "af0b75e10ec2c9e797c35598e8fc0207";
-    var zomatoPlace = placeChosen();
-    console.log(zomatoPlace);
-
-    var zomatoQueryURL = "https://developers.zomato.com/api/v2.1/search?entity_id=" + zomatoPlace + "&entity_type=city&count=5&sort=rating";
-    var queryURL = "https://api.openweathermap.org/data/2.5/forecast/daily?q=" + random + "&cnt=5&units=imperial&APPID=166a433c57516f51dfab1f7edaed8413";
-
-    initializeMap(random);
-
-    $("#start-date").val(today.format("YYYY-MM-DD"));
-    $("#end-date").val(tomorrow.format("YYYY-MM-DD"));
-
-    $("#spin").append(random);
-    $("#spin").addClass("show");
-
-    console.log($("#weather-table").html());
-
-    $("#weather-table").empty();
-    $("#food-table").empty();
-    
-
-//     var elements = document.querySelectorAll('#spin');
-
-// Array.prototype.forEach.call(elements, function (el) {
-//   const chaffle = new Chaffle(el, { /* options */ });
-
-  
-//     $("#spin").addClass("show");
-//     chaffle.init();
-    
-  
-// });
-
-    // Weather api call and displaying results to table
-    $.ajax({
-      url: queryURL,
-      method: "GET"
-    }).then(function (response) {
-console.log("response list", response.list);
-      response.list.forEach(function (day) {
-        var newRow = $("<tr>");
-        newRow.append([
-          $("<td>").append(moment.unix(day.dt.toString()).format("M/D")),
-          $("<td>").append(parseInt(day.temp.day) + "°F"),
-          $("<td>").append(day.weather[0].main),
-        ]);
-        $("#weather-table").append(newRow);
+      $.ajax({
+        url: zomatoIdURL,
+        method: "GET",
+        headers: {
+          'user-key': zomatoKey,
+          'content-type': "application/json"
+        }
+      }).then((response) => {
+        let grabbedId = response.location_suggestions[0].id;
+        console.log(`Zomato City Id = ${grabbedId}`);
+        getZomatoRestaurants(grabbedId)
       })
-    });
+    }
 
-    // zomato api call and dispalying results to table
-    console.log(zomatoQueryURL);
-    $.ajax({
-      url: zomatoQueryURL,
-      method: "GET",
-      headers: {
-        'user-key': zomatoKey
-      },
-    }).then(function(response) {
-      console.log(response);
-      // function to pull the proper info from the array
+    //zomato restaurant lookup by city id
+    const getZomatoRestaurants = (id) => {
+      const zomatoRestaurantURL = "https://developers.zomato.com/api/v2.1/search?entity_id=" + id + "&entity_type=city&count=10&sort=rating";
+
+      $.ajax({
+        url: zomatoRestaurantURL,
+        method: "GET",
+        headers: {
+          'user-key': zomatoKey,
+          'content-type': "application/json"
+        }
+      }).then((response) => {
+        console.log(response);
+
         for (i = 0; i < response.restaurants.length; i++) {
           var information = {
-              name: response.restaurants[i].restaurant.name, 
-              rating: response.restaurants[i].restaurant.user_rating.aggregate_rating, 
-              type: response.restaurants[i].restaurant.cuisines,
-              link: response.restaurants[i].restaurant.events_url,
-            };
-          console.log(information.name);
-          console.log(information.rating);
-          console.log(information.type);
-          console.log(information.link);
+            name: response.restaurants[i].restaurant.name,
+            rating: response.restaurants[i].restaurant.user_rating.agreegate_rating,
+            type: response.restaurants[i].restaurant.cuisines,
+            link: response.restaurants[i].restaurant.events_url,
+          };
 
-          var foodRow = $("<tr>");
-          foodRow.append([
-            $("<td>").append(information.name),
-            $("<td>").append(information.rating),
-            $("<td>").append(information.type),
-            $("<td>").append("<a href=" + information.link + " target=_blank>Zomato Page</a>"),
-          ]);
-          $("#food-table").append(foodRow);
+          console.log(information);
         }
-    });
+      })
+    }
+
+    getZomatoPlaceId(userLocationQuery);
+
+
+    // google map init
+    // lat + long from map init
+    // grab lat + long to darkskyapi
+    // append to page
   });
 })
 

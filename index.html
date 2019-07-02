@@ -3,110 +3,106 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Explore More</title>
+  <title>Explore More - Plan Less</title>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
   <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="assets/style.css" />
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
-  <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+  <!-- Maps scripts -->
+  <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
   <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
   <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 
 <body>
-
-  <header class="container">
-   <h1>Explore More</h1>
-   <h2>plan less....</h2>
-  </header>
-<br>
-
-
-  <div class="row container table">
-    <!-- <div id="location"></div> -->
-    <div data-aos="flip-up" data-aos-offset="200"
-    data-aos-delay="50"
-    data-aos-duration="1000" id="spin"></div>
-  
-
-  <div class="row container">
-    <div class="col-md-6"></div>
-    <div id="location"></div>
-    <div id="spin"></div>
-  </div>
-
-  <div class="container row">
-    <button type="button" class="spin btn btn-info" id="spinbtn">Explore</button>
-    <br>
-  </div>
-  <br>
-
-  <div class="row container">
-    <div data-aos="fade-right"     data-aos-easing="linear"
-    data-aos-duration="1000" class="border col-md-6" style="width: 640px; height: 480px" id="map">Map</div>
-
-
-    <div data-aos="fade-up-left"
-    data-aos-easing="linear"
-    data-aos-duration="1000" class="border col-md-5" id="weather"><h3><i class="fas fa-cloud-sun"></i>    Weather Forcast</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Day</th>
-            <th scope="col">Temp</th>
-            <th scope="col">Precipitation</th>
-          </tr>
-        </thead>
-        <tbody id="weather-table">
-        </tbody>
-      </table>
+  <header class="header">
+    <div class="video">
+      <video class="video__content" autoplay muted loop>
+        <source src="img/In-The-Clouds.webm" type="video/webm">
+        <source src="img/In-The-Clouds.mp4" type="video/mp4">
+        Your browser does not support this video.
+      </video>
     </div>
-    <div class = "row container">
-      <div data-aos="fade-up" 
-      data-aos-easing="linear"
-      data-aos-duration="1000"
-      class="border col-md-12" id="food"><h3><i class="fas fa-utensils"></i>    Places To Eat</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Rating</th>
-              <th scope="col">Style</th>
-              <th scope="col">Link</th>
-            </tr>
-          </thead>
-          <tbody id="food-table">
-          </tbody>
-        </table>
-      </div>
-      </div>
-  </div>
-  </div>
 
-  <div style="width: 640px; height: 480px" id="map"></div>
+    <div class="header__logo-box">
+      <img src="img/exploremore-logo.png" alt="Logo" class="header__logo">
+    </div>
+
+    <div class="header__text-box">
+      <h1 class="heading-primary">
+        <span class="heading-primary--main">Explore More</span>
+        <span class="heading-primary--small">and Plan Less</span>
+      </h1>
+    </div>
+
+    <div class="header__search">
+      <div class="search__form">
+        <form action="#" class="form">
+          <div class="form__group u-center-text">
+            <input type="text" class="form__input" placeholder="Start" id="start" required>
+            <label for="start" class="form__label">to</label>
+          </div>
+
+          <div class="form__group u-center-text">
+            <input type="text" class="form__input" placeholder="Destination" id="destination" required>
+            <label for="destination" class="form__label"></label>
+          </div>
+
+          <div class="form__group u-center-text">
+            <div class="btn btn--search" id="search">Search &darr;</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section-map">
+      <div class="map">
+        <div class="map__title">
+          Interactive Map
+        </div>
+
+        <div class="map__map">
+        </div>
+      </div>
+    </section>
+
+    <div class="mapEmbed" id="mapEmbed"></div>
+
+    <section class="section-results">
+      <div class="u-center-text u-margin-bottom-big">
+        <h2 class="heading-secondary">
+          Select a Date Range:
+        </h2>
+      </div>
+
+      <div class="row">
+        <form action="#" class="form">
+          <div class="form__group form__group--results">
+            <input type="date" class="form__input form__input--results" placeholder="Start Date" id="startDate"
+              required>
+            <label for="startDate" class="form__label">Start Date</label>
+          </div>
+
+          <div class="form__group form__group--results">
+            <input type="date" class="form__input form__input--results" placeholder="Return Date" id="returnDate"
+              required>
+            <label for="startDate" class="form__label">Return Date</label>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+
+
 
   <script src="assets/main.js"></script>
-
 </body>
-
-<footer>
-  A project by: 
-      Seth Wills,
-      Curtis Simpson, and
-      Jake Duckworth
-      
-</footer>
 
 </html>
