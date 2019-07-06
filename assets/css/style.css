@@ -178,6 +178,10 @@ body {
   background-color: #4E8098;
   color: #FCF7F8; }
 
+.map__map {
+  margin: 0 auto;
+  border-radius: 50%; }
+
 .section-results {
   background-color: #CED3DC;
   padding: 5rem 0; }

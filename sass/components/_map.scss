@@ -1,8 +1,13 @@
 .map {
-    height: 250px;
-    width: 250px;
+
 
     &__title {
 
+    }
+
+    &__map {
+        margin: 0 auto;
+        border-radius: 50%;
+        
     }
 }

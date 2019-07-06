@@ -1,6 +1,7 @@
 let map;
 
 let initializeMap = (city) => {
+
   // maps object instantiated with credentials
   let platform = new H.service.Platform({
     'app_id': 'QTX9Ulhk71aSUq6SF51d',
@@ -66,13 +67,16 @@ $(document).ready(function () {
   // click handler so that nothing runs without it being clicked first
   $("#search").on("click", () => {
 
+    // remove the map if it exists
+    $("#mapEmbed").empty();
+
     // identify some keys and values to be used
     const zomatoKey = "af0b75e10ec2c9e797c35598e8fc0207";
     const weatherKey = "7cc8e08326886fb8098d2b341400c7da";
     const userLocationQuery = $("#destination").val();
 
     // google map init, setting our latitude and longitude for weather api
-    initializeMap("Denver");
+    initializeMap(userLocationQuery);
 
     // look up zomato city id since we can't just search restaurants by name
     const getZomatoPlaceId = (query) => {
