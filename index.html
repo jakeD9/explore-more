@@ -16,6 +16,8 @@
   <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
   <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
   <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript"></script>
+  <!-- Moment -->
+  <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 </head>
 
 <body>
@@ -63,13 +65,11 @@
   <main>
     <section class="section-map">
       <div class="map">
-        <div class="map__title">
+        <h3 class="map__title heading-animated">
           Interactive Map
-        </div>
+        </h3>
 
-        <div class="map__map" style="width: 80%; height: 400px" id="mapEmbed">
-
-        </div>
+        <div class="map__map" style="width: 80%; height: 400px" id="mapEmbed"></div>
       </div>
     </section>
 
@@ -92,9 +92,13 @@
           <div class="form__group form__group--results">
             <input type="date" class="form__input form__input--results" placeholder="Return Date" id="returnDate"
               required>
-            <label for="startDate" class="form__label">Return Date</label>
+            <label for="returnDate" class="form__label">Return Date</label>
           </div>
+
+          <div class="btn btn--search" id="update">Search &darr;</div>
+
         </form>
+
       </div>
     </section>
   </main>

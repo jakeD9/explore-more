@@ -1,4 +1,9 @@
+moment().format();
 let map;
+let currentGeocode = {
+  lng: undefined,
+  lat: undefined
+}
 
 let initializeMap = (city) => {
 
@@ -9,7 +14,7 @@ let initializeMap = (city) => {
     useHTTPS: true
   });
 
-  // gets default map types from the platform object
+  // setting ppi we want our map to display at
   let pixelRatio = window.devicePixelRatio || 1;
   let defaultLayers = platform.createDefaultLayers({
     tileSize: pixelRatio === 1 ? 256 : 512,
@@ -22,7 +27,7 @@ let initializeMap = (city) => {
     defaultLayers.normal.map,
     { pixelRatio: pixelRatio });
 
-  // interactive ui
+  // interactive ui setup
   let behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
   let ui = H.ui.UI.createDefault(map, defaultLayers);
 
@@ -38,12 +43,15 @@ let initializeMap = (city) => {
       position,
       marker;
 
-      position = {
-        lat: location[0].Location.DisplayPosition.Latitude,
-        lng: location[0].Location.DisplayPosition.Longitude
-      }
+    position = {
+      lat: location[0].Location.DisplayPosition.Latitude,
+      lng: location[0].Location.DisplayPosition.Longitude
+    }
 
     moveMap(map, position.lat, position.lng);
+    currentGeocode.lat = position.lat;
+    currentGeocode.lng = position.lng;
+    console.log("Location changed. \n LONGITUDE: " + currentGeocode.lng + "\n LATITUDE: " + currentGeocode.lat);
   };
 
   let geocoder = platform.getGeocodingService();
@@ -63,74 +71,98 @@ let moveMap = (map, lat, lng) => {
 }
 
 $(document).ready(function () {
+  initializeMap(" ");
 
   // click handler so that nothing runs without it being clicked first
   $("#search").on("click", () => {
 
+    const queries = {
+      start: $("#start").val(),
+      destination: $("#destination").val(),
+    }
+
     // remove the map if it exists
     $("#mapEmbed").empty();
 
-    // identify some keys and values to be used
-    const zomatoKey = "af0b75e10ec2c9e797c35598e8fc0207";
-    const weatherKey = "7cc8e08326886fb8098d2b341400c7da";
-    const userLocationQuery = $("#destination").val();
-
     // google map init, setting our latitude and longitude for weather api
-    initializeMap(userLocationQuery);
+    initializeMap(queries.destination);
 
-    // look up zomato city id since we can't just search restaurants by name
-    const getZomatoPlaceId = (query) => {
-      const zomatoIdURL = "https://developers.zomato.com/api/v2.1/cities?q=" + query;
+    // look up zomato city id since we can't just search restaurants by city name
+    const getZomato = (query) => {
+      const zomatoIdURL = `http://localhost:3030/exploremore/zomato/${query}`;
 
       $.ajax({
         url: zomatoIdURL,
         method: "GET",
-        headers: {
-          'user-key': zomatoKey,
-          'content-type': "application/json"
-        }
+        
       }).then((response) => {
-        let grabbedId = response.location_suggestions[0].id;
-        console.log(`Zomato City Id = ${grabbedId}`);
-        getZomatoRestaurants(grabbedId)
-      })
-    }
-
-    //zomato restaurant lookup by city id
-    const getZomatoRestaurants = (id) => {
-      const zomatoRestaurantURL = "https://developers.zomato.com/api/v2.1/search?entity_id=" + id + "&entity_type=city&count=10&sort=rating";
-
-      $.ajax({
-        url: zomatoRestaurantURL,
-        method: "GET",
-        headers: {
-          'user-key': zomatoKey,
-          'content-type': "application/json"
-        }
-      }).then((response) => {
-        console.log(response);
-
         for (i = 0; i < response.restaurants.length; i++) {
           var information = {
             name: response.restaurants[i].restaurant.name,
             rating: response.restaurants[i].restaurant.user_rating.agreegate_rating,
             type: response.restaurants[i].restaurant.cuisines,
-            link: response.restaurants[i].restaurant.events_url,
+            link: response.restaurants[i].restaurant.events_url
           };
-
           console.log(information);
         }
       })
     }
 
-    getZomatoPlaceId(userLocationQuery);
-
-
-    // google map init
-    // lat + long from map init
-    // grab lat + long to darkskyapi
-    // append to page
+    getZomato(queries.destination);
   });
+
+  $("#update").on("click", () => {
+
+    // declare some values
+    let startDate = $("#startDate").val()
+    let returnDate = $("#returnDate").val()
+
+    // objects to store our airport codes and search parameters
+    const queries = {
+      start: $("#start").val(),
+      destination: $("#destination").val(),
+    }
+
+    // take the two date values and convert them into unix using moment for our weather api
+    let unixStart = moment(startDate, "YYYY-MM-DD").unix();
+    let unixReturn = moment(returnDate, "YYYY-MM-DD").unix();
+
+    // weather api call
+    const getWeather = (lat, lng, date) => {
+      const weatherURL = `http://localhost:3030/exploremore/weather/${lat}/${lng}/${date}`;
+      console.log(weatherURL);
+
+      // darksky api doesn't allow cors access, so we pass it through a proxy server using fetch instead of ajax
+      fetch(weatherURL, {
+        method: 'GET',
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        let weatherData = data.daily.data[0]
+        console.log(weatherData.summary);
+        console.log(weatherData.precipProbability);
+        console.log(weatherData.precipType);
+        console.log(weatherData.temperatureHigh, weatherData.temperatureLow);
+        console.log(weatherData.humidity);
+      })
+    }
+
+    // flight prices api call
+    const getFlights = (origin, destination, departDate, returnDate) => {
+      const flightURL = `http://localhost:3030/exploremore/flightsearch/${origin}/${destination}/${departDate}/${returnDate}`
+
+      fetch(flightURL, {
+        method: 'GET',
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+      })
+    }
+
+    getFlights(queries.start, queries.destination, startDate, returnDate);
+    getWeather(currentGeocode.lat, currentGeocode.lng, unixStart)
+  })
 })
 
 
