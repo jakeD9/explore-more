@@ -1,9 +1,85 @@
-.section-results {
-    background-color: $color-grey-medium;
-    padding: 5rem 0;
+.section-content {
+  padding: 5rem 0;
+  background-color: $color-grey-medium;
 }
 
-.section-map {
-    padding: 5rem 0;
-    background-color: $color-grey-medium;
+.content {
+  &__food {
+
+    &--img {
+      height: 100px;
+      width: 100px;
+    }
+
+    & > ul {
+      float: left;
+    }
+
+    &--item {
+      list-style: none;
+      padding-left: 1rem;
+      font-size: 1.6rem;
+      color: $color-primary;
+
+      & > a {
+        font-size: 1.8rem;
+        text-decoration: none;
+        font-weight: 700;
+        color: $color-primary-dark;
+      }
+
+      & > i {
+        color: gold;
+      }
+    }
+  }
+
+  &__travel {
+
+    &--weather {
+        color: $color-primary;
+        font-size: 4rem;
+
+        &-small {
+            color: $color-primary;
+            font-size: 1.8rem;
+        }
+    }
+
+    &--info {
+        & > li {
+            list-style: none;
+            color: $color-primary;
+            float: left;
+            padding: .2rem;
+            display: inline-block;
+            margin: 2rem;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+    }
+
+  }
+}
+
+.container {
+    display: block;
+    border-radius: .5rem;
+    @include clearfix;
+    margin: 1rem 0;
+    transition: all .2s;
+    background-color: white;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba($color-black, .3);
+    }
+
+    & > img {
+        display: inline-block;
+        max-height: 100%;
+        max-width: 100%;
+        float: left;
+        margin: 1rem;
+    }
 }

@@ -49,14 +49,19 @@
     }
 
     &__label {
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 700;
         margin-top: 1rem;
         margin-bottom: -2rem;
-        display: inline-block;
+        display: block;
         color: $color-black;
         opacity: 1;
         transition: all .4s;
+        
+        &--travel {
+            text-align: left;
+            padding-left: 2rem;
+        }
     }
 
     

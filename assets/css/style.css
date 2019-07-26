@@ -33,6 +33,12 @@ body {
     font-weight: 700;
     letter-spacing: .22rem; }
 
+.heading-secondary {
+  color: #274756; }
+
+.heading-tertiary {
+  color: #274756; }
+
 .u-center-text {
   text-align: center; }
 
@@ -47,6 +53,9 @@ body {
 
 .u-margin-top-big {
   margin-top: 8rem; }
+
+.hidden {
+  display: none; }
 
 .row {
   max-width: 114rem;
@@ -141,14 +150,17 @@ body {
     .form__input::-webkit-input-placeholder {
       color: #67696e; }
   .form__label {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin-top: 1rem;
     margin-bottom: -2rem;
-    display: inline-block;
+    display: block;
     color: #000;
     opacity: 1;
     transition: all .4s; }
+    .form__label--travel {
+      text-align: left;
+      padding-left: 2rem; }
   .form__input:placeholder-shown ~ .form__label {
     opacity: 0;
     visibility: hidden;
@@ -178,15 +190,96 @@ body {
   background-color: #4E8098;
   color: #FCF7F8; }
 
-.map__map {
+.btn--travel {
+  position: absolute;
+  transform: translateY(2rem); }
+
+.map {
   margin: 0 auto;
   box-shadow: 0 1.3rem 5rem rgba(0, 0, 0, 0.1);
   border-radius: .4rem; }
 
-.section-results {
-  background-color: #CED3DC;
-  padding: 5rem 0; }
+.navigation__nav {
+  height: 6rem;
+  display: inline-block;
+  margin-top: 3.5rem;
+  margin-bottom: 3.5rem; }
 
-.section-map {
+.navigation__item {
+  float: left;
+  list-style: none;
+  margin: 0 5rem;
+  padding: 2rem;
+  color: #4E8098;
+  font-size: 2rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  background-image: linear-gradient(120deg, transparent 0%, transparent 50%, #4E8098 50%);
+  background-size: 240%;
+  transition: all 0.4s; }
+  .navigation__item:hover {
+    background-position: 100%;
+    color: white;
+    transform: translateY(-1rem);
+    cursor: pointer; }
+
+.section-content {
   padding: 5rem 0;
   background-color: #CED3DC; }
+
+.content__food--img {
+  height: 100px;
+  width: 100px; }
+
+.content__food > ul {
+  float: left; }
+
+.content__food--item {
+  list-style: none;
+  padding-left: 1rem;
+  font-size: 1.6rem;
+  color: #4E8098; }
+  .content__food--item > a {
+    font-size: 1.8rem;
+    text-decoration: none;
+    font-weight: 700;
+    color: #274756; }
+  .content__food--item > i {
+    color: gold; }
+
+.content__travel--weather {
+  color: #4E8098;
+  font-size: 4rem; }
+  .content__travel--weather-small {
+    color: #4E8098;
+    font-size: 1.8rem; }
+
+.content__travel--info > li {
+  list-style: none;
+  color: #4E8098;
+  float: left;
+  padding: .2rem;
+  display: inline-block;
+  margin: 2rem;
+  font-weight: 700;
+  font-size: 1.6rem; }
+
+.container {
+  display: block;
+  border-radius: .5rem;
+  margin: 1rem 0;
+  transition: all .2s;
+  background-color: white; }
+  .container::after {
+    content: "";
+    display: table;
+    clear: both; }
+  .container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3); }
+  .container > img {
+    display: inline-block;
+    max-height: 100%;
+    max-width: 100%;
+    float: left;
+    margin: 1rem; }

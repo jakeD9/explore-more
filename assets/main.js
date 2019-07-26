@@ -5,8 +5,27 @@ let currentGeocode = {
   lat: undefined
 }
 
-let initializeMap = (city) => {
+// simulate navigation for displaying content
+let navigation = {
+  showMap: () => {
+    $("#foodContent").addClass("hidden");
+    $("#travelContent").addClass("hidden");
+    $("#mapContent").removeClass("hidden");
+  },
+  showFood: () => {
+    $("#travelContent").addClass("hidden");
+    $("#mapContent").addClass("hidden");
+    $("#foodContent").removeClass("hidden");
+  },
+  showTravel: () => {
+    $("#mapContent").addClass("hidden");
+    $("#foodContent").addClass("hidden");
+    $("#travelContent").removeClass("hidden");
+  }
+}
 
+// map creation
+let initializeMap = (city) => {
   // maps object instantiated with credentials
   let platform = new H.service.Platform({
     'app_id': 'QTX9Ulhk71aSUq6SF51d',
@@ -73,9 +92,20 @@ let moveMap = (map, lat, lng) => {
 $(document).ready(function () {
   initializeMap(" ");
 
+  $("#navMap").on("click", () => {
+    navigation.showMap();
+    })
+
+  $("#navFood").on("click", () => {
+    navigation.showFood();
+  })
+
+  $("#navTravel").on("click", () => {
+    navigation.showTravel();
+  })
+
   // click handler so that nothing runs without it being clicked first
   $("#search").on("click", () => {
-
     const queries = {
       start: $("#start").val(),
       destination: $("#destination").val(),
@@ -89,22 +119,55 @@ $(document).ready(function () {
 
     // look up zomato city id since we can't just search restaurants by city name
     const getZomato = (query) => {
-      const zomatoIdURL = `http://localhost:3030/exploremore/zomato/${query}`;
+      const zomatoIdURL = `https://jdproxy.herokuapp.com/exploremore/zomato/${query}`;
 
       $.ajax({
         url: zomatoIdURL,
         method: "GET",
         
       }).then((response) => {
+        let restaurants = [];
+
         for (i = 0; i < response.restaurants.length; i++) {
-          var information = {
+          let information = {
+            id: i + 1,
             name: response.restaurants[i].restaurant.name,
-            rating: response.restaurants[i].restaurant.user_rating.agreegate_rating,
+            location: response.restaurants[i].restaurant.location.locality,
+            rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
             type: response.restaurants[i].restaurant.cuisines,
-            link: response.restaurants[i].restaurant.events_url
+            link: response.restaurants[i].restaurant.url,
+            thumb: response.restaurants[i].restaurant.thumb
           };
-          console.log(information);
+          restaurants.push(information)
         }
+
+        // html template for each restaurant to display
+        let foodHTML = (restaurant) => {
+          return `<div class="container">
+                    <img src=${restaurant.thumb} alt="Restaurant image" class="content__food--img">
+                    <ul class="content__food--info">
+                      <li class="content__food--item"><a href=${restaurant.link} target="_blank">${restaurant.name}</a></li>
+                      <li class="content__food--item">${restaurant.location}</li>
+                      <li class="content__food--item">${restaurant.type}</li>
+                      <li class="content__food--item">${restaurant.rating} <i class="fas fa-star"></i></li>
+                    </ul>
+                  </div>`
+        }
+
+        // mapping data to each template and throwing them all in the same div
+        let foodList = (restaurantData) => {
+          return `<div> 
+                    ${restaurantData.map(foodHTML).join('')}
+                  </div>`
+        }
+
+        // filtering by id to make it easy which column to map the data to
+        let even = restaurants.filter(restaurant => restaurant.id % 2 === 0)
+        let odd = restaurants.filter(restaurant => restaurant.id % 2 > 0)
+
+        // actual DOM manipulation
+        $("#foodContent1").html(foodList(odd))
+        $("#foodContent2").html(foodList(even))
       })
     }
 
@@ -113,11 +176,11 @@ $(document).ready(function () {
 
   $("#update").on("click", () => {
 
-    // declare some values
+    // search parameters
     let startDate = $("#startDate").val()
     let returnDate = $("#returnDate").val()
 
-    // objects to store our airport codes and search parameters
+    // search parameters
     const queries = {
       start: $("#start").val(),
       destination: $("#destination").val(),
@@ -129,8 +192,7 @@ $(document).ready(function () {
 
     // weather api call
     const getWeather = (lat, lng, date) => {
-      const weatherURL = `http://localhost:3030/exploremore/weather/${lat}/${lng}/${date}`;
-      console.log(weatherURL);
+      const weatherURL = `https://jdproxy.herokuapp.com/exploremore/weather/${lat}/${lng}/${date}`;
 
       // darksky api doesn't allow cors access, so we pass it through a proxy server using fetch instead of ajax
       fetch(weatherURL, {
@@ -139,24 +201,71 @@ $(document).ready(function () {
         return response.json();
       }).then((data) => {
         let weatherData = data.daily.data[0]
-        console.log(weatherData.summary);
-        console.log(weatherData.precipProbability);
-        console.log(weatherData.precipType);
-        console.log(weatherData.temperatureHigh, weatherData.temperatureLow);
-        console.log(weatherData.humidity);
+
+        // convert decimal values to percentages
+        let convertFloat = (num) => {
+          if (num === 1) return "100%"
+          else {
+            let newNum = num.toString();
+            let numArr = newNum.split(".");
+            newNum = numArr[1].substr(0, 2);
+            return newNum + "%"
+          }
+        }
+
+        // html template for weather
+        let weatherHTML = (weather) => {
+          return `<div class="container u-center-text">
+                    <div class="content__travel--weather"><i class="fas fa-thermometer-quarter"></i> ${Math.floor(weather.temperatureLow)}&deg;F to <i
+                    class="fas fa-thermometer-full"></i> ${Math.floor(weather.temperatureHigh)}&deg;F</div>
+                    <div class="content__travel--weather"><i class="fas fa-cloud-rain"></i> ${convertFloat(weather.precipProbability)} ${weather.precipType}</div>
+                    <div class="content__travel--weather"><i class="fas fa-shower"></i> ${convertFloat(weather.humidity)} Humidity</div>
+                    <div class="content__travel--weather-small">${weather.summary}</div>
+                  </div>`
+        }
+
+        // DOM manipulation
+        $("#weatherWrap").html(weatherHTML(weatherData))
       })
     }
 
     // flight prices api call
     const getFlights = (origin, destination, departDate, returnDate) => {
-      const flightURL = `http://localhost:3030/exploremore/flightsearch/${origin}/${destination}/${departDate}/${returnDate}`
+      const flightURL = `https://jdproxy.herokuapp.com/exploremore/flightsearch/${origin}/${destination}/${departDate}/${returnDate}`
 
       fetch(flightURL, {
         method: 'GET',
       }).then((response) => {
         return response.json();
       }).then((data) => {
-        console.log(data);
+        const airlines = data.dictionaries.carriers;
+        let flights = [];
+
+        for (i = 0; i < data.data.length; i++) {
+          let flightInfo = {
+            price: data.data[i].offerItems[0].price.total,
+            airline: airlines[data.data[i].offerItems[0].services[0].segments[0].flightSegment.carrierCode]
+          }
+          flights.push(flightInfo);
+        }
+
+        let flightHTML = (flight) => {
+          return `<div class="container">
+                    <ul class="content__travel--info">
+                      <li class="content__travel--item">${flight.airline}</li>
+                      <li class="content__travel--item"><i class="fas fa-arrow-right"></i></li>
+                      <li class="content__travel--item">${flight.price}</li>
+                    </ul>
+                  </div>`
+        }
+
+        let flightList = (flightData) => {
+          return `<div>
+                    ${flightData.map(flightHTML).join('')}
+                  </div>`
+        }
+
+        $("#flightContent").html(flightList(flights))
       })
     }
 
