@@ -209,7 +209,8 @@ $(document).ready(function () {
             let newNum = num.toString();
             let numArr = newNum.split(".");
             newNum = numArr[1].substr(0, 2);
-            return newNum + "%"
+            if (newNum < 10) return newNum[1] + "%"
+            else return newNum + "%"
           }
         }
 
