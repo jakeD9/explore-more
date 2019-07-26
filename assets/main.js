@@ -254,7 +254,7 @@ $(document).ready(function () {
                     <ul class="content__travel--info">
                       <li class="content__travel--item">${flight.airline}</li>
                       <li class="content__travel--item"><i class="fas fa-arrow-right"></i></li>
-                      <li class="content__travel--item">${flight.price}</li>
+                      <li class="content__travel--item">~$${flight.price} per person</li>
                     </ul>
                   </div>`
         }
