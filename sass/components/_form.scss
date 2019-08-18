@@ -1,16 +1,20 @@
 .form {
     text-align: center;
 
-    &__group:not(:last-child) {
-        margin-bottom: 3rem;
+    &--travel {
+        display: flex;
+        justify-content: space-around;
+
+        @media screen and (max-width: 750px) {
+            flex-direction: column;
+        }
     }
 
-    &__group--results {
-        display: inline-block;
-        width: 30%;
+    &__group {
 
-        &:not(:last-child) {
-            margin-right: 10rem;
+        &--results {
+            width: 100%;
+            padding: 2rem 0;
         }
     }
 
@@ -23,15 +27,18 @@
         background-color: rgba($color-white, .5);
         border: none;
         border-bottom: 4px solid transparent;
-        width: 30%;
+        width: 50%;
         display: block;
         transition: all .4s;
         margin: 0 auto;
 
-        &--results {
-            width: 100%;
+        @media only screen and (max-width: 950px) {
+            width: 75%;
         }
 
+        &--results {
+            width: 60%;
+        }
 
         &:focus {
             outline: none;
@@ -52,7 +59,7 @@
         font-size: 1.5rem;
         font-weight: 700;
         margin-top: 1rem;
-        margin-bottom: -2rem;
+        margin-bottom: 2rem;
         display: block;
         color: $color-black;
         opacity: 1;
@@ -61,10 +68,11 @@
         &--travel {
             text-align: left;
             padding-left: 2rem;
+            margin: 1rem auto;
+            width: 60%;
         }
     }
 
-    
     &__input:placeholder-shown ~ &__label {
         opacity: 0;
         visibility: hidden;

@@ -28,10 +28,12 @@
     &--search {
         background-color: $color-primary;
         color: $color-grey-light;
+        margin-top: 2rem;
     }
 
     &--travel {
-        position: absolute;
-        transform: translateY(2rem)
+        text-align: center;
+        background-color: $color-primary;
+        color: $color-grey-light;
     }
 }

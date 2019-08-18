@@ -216,7 +216,7 @@ $(document).ready(function () {
 
         // html template for weather
         let weatherHTML = (weather) => {
-          return `<div class="container u-center-text">
+          return `<div class="container container--weather">
                     <div class="content__travel--weather"><i class="fas fa-thermometer-quarter"></i> ${Math.floor(weather.temperatureLow)}&deg;F to <i
                     class="fas fa-thermometer-full"></i> ${Math.floor(weather.temperatureHigh)}&deg;F</div>
                     <div class="content__travel--weather"><i class="fas fa-cloud-rain"></i> ${convertFloat(weather.precipProbability)} ${weather.precipType}</div>

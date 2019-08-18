@@ -46,17 +46,17 @@
     <div class="header__search">
       <div class="search__form">
         <form action="#" class="form">
-          <div class="form__group u-center-text">
+          <div class="form__group">
             <input type="text" class="form__input" placeholder="Start" id="start" required>
             <label for="start" class="form__label">to</label>
           </div>
 
-          <div class="form__group u-center-text">
+          <div class="form__group">
             <input type="text" class="form__input" placeholder="Destination" id="destination" required>
             <label for="destination" class="form__label"></label>
           </div>
 
-          <div class="form__group u-center-text u-margin-top-big">
+          <div class="form__group">
             <div class="btn btn--search" id="search">Search &darr;</div>
           </div>
         </form>
@@ -64,7 +64,7 @@
     </div>
   </header>
 
-  <div class="navigation u-center-text">
+  <div class="navigation">
     <nav class="navigation__nav">
       <ul class="navigation__list">
         <li class="navigation__item" id="navMap"><a>Interactive Map</a></li>
@@ -84,14 +84,14 @@
 
       <!-- travel begins -->
       <div class="content hidden" id="travelContent">
-        <div class="u-center-text u-margin-bottom-medium">
+        <div class="header__text-box header__text-box--travel">
           <h2 class="heading-secondary">
             Select a Date Range:
           </h2>
         </div>
 
         <div class="row">
-          <form action="#" class="form">
+          <form action="#" class="form--travel">
             <div class="form__group form__group--results">
               <input type="date" class="form__input form__input--results" placeholder="Start Date" id="startDate"
                 required>
@@ -103,40 +103,49 @@
                 required>
               <label for="returnDate" class="form__label form__label--travel">Return Date</label>
             </div>
-
-            <div class="btn btn--search btn--travel" id="update">Go &rarr;</div>
-
           </form>
         </div>
 
-        <div class="row">
-          <div class="col-1-of-2 content__travel">
-            <div class="u-center-text u-margin-bottom-medium">
+        <div class="content__row content__row--travelbtn">
+          <div class="btn btn--travel" id="update">Go &rarr;</div>
+        </div>
+
+        <div class="content__row">
+          <div class="content__travel">
+            <div class="header__text-box">
               <h3 class="heading-tertiary">
                 <i class="fas fa-plane-departure"></i> Flight Estimates
               </h3>
             </div>
 
-            <div id="flightContent"></div>
+            <div id="flightContent">
+              
+            </div>
 
           </div>
-          <div class="col-1-of-2 content__travel">
-            <div class="u-center-text u-margin-bottom-medium">
+          <div class="content__travel">
+            <div class="header__text-box">
               <h3 class="heading-tertiary">
                 <i class="fas fa-cloud"></i> Weather Forecast
               </h3>
             </div>
-            <div id="weatherWrap"></div>
+
+            <div id="weatherWrap">
+
+            </div>
+
           </div>
         </div>
+      </div>
       </div>
       <!-- travel ends -->
 
       <!-- food begins -->
       <div class="content hidden" id="foodContent">
-        <div class="row">
-          <div class="col-1-of-2 content__food" id="foodContent1"></div>
-          <div class="col-1-of-2 content__food" id="foodContent2"></div>
+        <div class="content__row">
+          <div class="content__food" id="foodContent1"></div>
+
+          <div class="content__food" id="foodContent2"></div>
         </div>
       </div>
       <!-- food ends -->
